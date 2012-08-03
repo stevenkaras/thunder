@@ -1,0 +1,11 @@
+v0.4.0
++ add help formatter
+
+v0.3.0
++ provide facility for defining options
+
+v0.2.0
++ pass leftover arguments to the command
+
+v0.1.0
++ call specified command
