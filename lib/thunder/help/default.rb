@@ -6,6 +6,7 @@ module Thunder
       # @see Thunder#help_command(command_spec)
       def help_command(command_spec)
         preamble = determine_preamble
+        #TODO: add options to output
         output = <<-EOS
 Usage:
   #{preamble} #{command_spec[:usage]}

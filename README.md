@@ -1,4 +1,3 @@
-=======
 Thunder
 =======
 Ruby gem for quick and easy command line interfaces
@@ -26,5 +25,5 @@ Development
 If you'd like to contribute, fork, commit, and request a pull. I'll get around to it. No special dependencies, or anything fancy
 
 License
-=======
+-------
 MIT License

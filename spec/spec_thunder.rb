@@ -13,6 +13,7 @@ class ThunderSpec < MiniTest::Spec
       # TODO: write these tests
     end
     it "should allow use of subcommands" do
+      # TODO: write some more tests
     end
   end
 end

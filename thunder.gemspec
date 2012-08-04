@@ -1,5 +1,4 @@
-$:.unshift File.join(File.dirname(__FILE__), "lib")
-require 'thunder'
+require File.expand_path("../lib/thunder/version", __FILE__)
 
 Gem::Specification.new do |s|
   s.version     = Thunder::VERSION
@@ -13,10 +12,6 @@ Gem::Specification.new do |s|
   s.homepage    = 'http://stevenkaras.github.com'
 
   s.files       =  []
-  s.files       += Dir['lib/**/*.rb']
-  s.files       += Dir['spec/**/*.rb']
-  s.files       += Dir['[A-Z]*']
-  s.files       += Dir['README*']
-  s.files       += Dir['CHANGELOG']
-
+  s.files       += Dir['lib/**/*.rb', 'spec/**/*.rb']
+  s.files       += Dir['[A-Z]*', 'README*', 'CHANGELOG']
 end

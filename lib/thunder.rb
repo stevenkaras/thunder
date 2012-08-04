@@ -1,9 +1,7 @@
-require 'thunder/version'
-
 # Provides a simple, yet powerful ability to quickly and easily tie Ruby methods
 # with command line actions.
 #
-# The syntax is very similar to Thor, without the most notable limitation
+# The syntax is very similar to Thor, so switching over should be extremely easy
 module Thunder
 
   # Used to indicate a boolean true or false value for options processing
@@ -45,11 +43,12 @@ module Thunder
   #         or nil if there is no appropriate command
   def determine_command(args)
     if args.empty?
-      command_name = self.class.thunder[:default_command]
-    else
-      command_name = args.shift.to_sym
+      return self.class.thunder[:commands][self.class.thunder[:default_command]]
     end
-    self.class.thunder[:commands][command_name]
+    command_name = args.first.to_sym
+    command_spec = self.class.thunder[:commands][command_name]
+    args.shift if command_spec
+    return command_spec
   end
 
   # Process command line options from the given argument list
@@ -100,13 +99,18 @@ module Thunder
   end
 
   public
-  def self.included(base) #:nodoc:
+  # @api private
+  # Automatically extends the singleton with {ClassMethods}
+  def self.included(base)
     base.send :extend, ClassMethods
   end
 
+  # This module provides methods for any class that includes Thunder
   module ClassMethods
 
-    def thunder #:nodoc:
+    # @api private
+    # Get the thunder configuration
+    def thunder
       @thunder ||= {
         default_command: :help,
         commands: {
@@ -121,43 +125,55 @@ module Thunder
       }
     end
 
-    def method_added(method) #:nodoc:
+    # @api private
+    # Registers a method as a thunder task
+    def method_added(method)
+      attributes = [:usage, :description, :options, :long_description]
+      return unless attributes.reduce { |a, key| a || thunder[key] }
       thunder[:commands][method] = {
         name: method,
-        usage: thunder[:usage],
-        description: thunder[:description],
-        options: thunder[:options]
       }
-      thunder[:usage], thunder[:description], thunder[:options] = nil
+      attributes.each do |key|
+        thunder[:commands][method][key] = thunder[key]
+        thunder[key] = nil
+      end
     end
     
-    # Set the options processor
+    # Set the options processor.
     #
     # @param processor [#process_options]
     def options_processor(processor)
       thunder[:options_processor] = processor
     end
 
-    # Set the help formatter
+    # Set the help formatter.
     #
     # @param formatter [#help_list,#help_command]
     def help_formatter(formatter)
       thunder[:help_formatter] = formatter
     end
 
-    # Set the default command.
+    # Set the default command to be executed when no suitable command is found.
     #
     # @param command [Symbol] the default command
     def default_command(command)
       thunder[:default_command] = command
     end
 
-    # Describe the next method (or subcommand)
+    # Describe the next method (or subcommand). A longer description can be given
+    # using the {#longdesc} command
     #
     # @param usage [String] the perscribed usage of the command
     # @param description [String] a short description of what the command does
     def desc(usage, description="")
       thunder[:usage], thunder[:description] = usage, description
+    end
+
+    # Provide a long description for the next method (or subcommand).
+    #
+    # @param description [String] a long description of what the command does
+    def longdesc(description)
+      thunder[:long_description] = description
     end
 
     # Define an option for the next method (or subcommand)
@@ -174,6 +190,8 @@ module Thunder
     #   option "verbose", desc: "print extra information"
     def option(name, options={})
     #TODO: have this generate YARDoc for the option (as it should match a method option)
+      name = name.to_sym
+      options[:name] = name
       options[:short] ||= name[0]
       options[:type] ||= Boolean
       options[:description] ||= ""
