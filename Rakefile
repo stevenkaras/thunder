@@ -1,7 +1,6 @@
 require 'rake/testtask'
 
-$:.unshift File.join(File.dirname(__FILE__), "lib")
-require 'thunder'
+require File.expand_path("../lib/thunder/version", __FILE__)
 
 Rake::TestTask.new do |t|
   t.test_files = FileList['test/*_test.rb']
