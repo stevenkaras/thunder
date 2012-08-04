@@ -23,15 +23,16 @@ module Thunder
       return get_help(args, options)
     end
 
-    options.merge!(process_options(args, command_spec))
+    parsed_options = process_options(args, command_spec)
+    options.merge!(parsed_options) if parsed_options
     if command_spec[:subcommand]
       return command_spec[:subcommand].start(args, options)
-    elsif options
+    elsif parsed_options
       #TODO: do arity check
-      return send command_spec, *args, options
+      return send command_spec[:name], *args, options
     else
       #TODO: do arity check
-      return send command_spec, *args
+      return send command_spec[:name], *args
     end
   end
 
