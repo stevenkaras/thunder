@@ -21,13 +21,13 @@ Goals
 -----
 Provide a simple, DRY syntatic sugar library that provides the necessary services to create command line mappings to ruby methods. It will not provide any other services.
 
-Phase 1: call a method from the command line
-Phase 2: provide options and arguments 
-Phase 3: provide help/banner formatter
-Phase 4: provide yardoc integration
-Phase 5: provide a bash-completion script
-Phase 6: ???
-Phase 7: Profit!
+Development Phases
+
+1. call a method from the command line
+2. provide options and arguments 
+3. provide help/banner formatter
+4. provide yardoc integration
+5. provide a bash-completion script
 
 Development
 -----------
