@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.authors     = ["Steven Karas"]
   s.email       = 'steven.karas@gmail.com'
-  s.homepage    = 'http://stevenkaras.github.com'
+  s.homepage    = 'http://stevenkaras.github.com/thunder'
 
   s.files       =  []
   s.files       += Dir['lib/**/*.rb', 'spec/**/*.rb']

@@ -1,4 +1,4 @@
-Thunder
+[Thunder](http://stevenkaras.github.com/thunder)
 =======
 Ruby gem for quick and easy command line interfaces
 
