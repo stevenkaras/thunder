@@ -5,7 +5,8 @@ module Thunder
     # @see Thunder#process_options
     def self.process_options(args, command_spec)
       return nil unless command_spec[:options]
-      Trollop.options do
+      #TODO: fix the unspecified option bug
+      command_spec[:option_processor] ||= Trollop::Parser.new do
         command_spec[:options].each do |name, option_spec|
           opt_options = {}
           description = option_spec[:desc] || ""
@@ -19,6 +20,7 @@ module Thunder
           opt name, description, opt_options
         end
       end
+      command_spec[:option_processor].parse(args)
     end
   end
 end

@@ -15,7 +15,7 @@ module Thunder
           opt << if option_spec[:type] == Boolean
             "--[no-]#{name}"
           else
-            "--#{name} [OPT]"
+            "--#{name} [#{name.to_s.upcase}]"
           end
           opt << option_spec[:type] unless option_spec[:type] == Boolean
           opt << option_spec[:desc]
@@ -34,6 +34,10 @@ module Thunder
       end
 
       return options
+    rescue OptionParser::InvalidOption => e
+      puts e
+      puts "Try --help for help."
+      exit 1
     end
   end
 end

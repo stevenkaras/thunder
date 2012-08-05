@@ -119,6 +119,7 @@ module Thunder
             name: :help,
             usage: "help [COMMAND]",
             description: "list available commands or describe a specific command",
+            long_description: nil,
             options: nil,
             default_help: true
           },
@@ -183,6 +184,7 @@ module Thunder
     # @option options :short [String] the short version of the option [the first letter of the option name]
     # @option options :type [Class] the datatype of this option [Boolean]
     # @option options :desc [String] the long description of this option [""]
+    # @option options :default [*] the default value
     #
     # @example
     #   option :output_file, type: String

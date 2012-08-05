@@ -7,12 +7,15 @@ module Thunder
       def help_command(command_spec)
         preamble = determine_preamble
         #TODO: add options to output
+        footer = ""
+        footer << command_spec[:description] + "\n" if command_spec[:description]
+        footer << command_spec[:long_description] + "\n" if command_spec[:long_description]
+        footer << "\n" + format_options(command_spec[:options]) if command_spec[:options]
         output = <<-EOS
 Usage:
   #{preamble} #{command_spec[:usage]}
 
-#{command_spec[:description]}
-#{command_spec[:long_description]}
+#{footer.strip}
         EOS
         output.rstrip
       end
@@ -28,6 +31,29 @@ Usage:
       end
 
       private
+
+      # format a set of option specs
+      #
+      # @param options [<Hash>] the option specs to format
+      # @return [String]
+      def format_options(options)
+        data = []
+        options.each do |name, option_spec|
+          data << format_option(option_spec)
+        end
+        "Options:\n" + render_table(data, ": ")
+      end
+
+      # format an option
+      #
+      # @param option_spec [Hash] the option spec to format
+      # @return [(String, String)] the formatted option and its description
+      def format_option(option_spec)
+        usage = "  -#{option_spec[:short]}, --#{option_spec[:name]}"
+        usage << " [#{option_spec[:name].to_s.upcase}]" unless option_spec[:type] == Boolean
+        return usage, option_spec[:desc]
+      end
+
       # determine the preamble
       # 
       # @return [String] the preamble
@@ -54,13 +80,13 @@ Usage:
       # @param data [(String,String)]
       # @param separator [String]
       # @return [String] a two-column table
-      def render_table(data, separator = "#")
+      def render_table(data, separator = " # ")
         column_width = data.group_by do |data|
           data.first.size
         end.max.first
         "".tap do |output|
           data.each do |line|
-            output << "%-#{column_width}s #{separator} %s\n" % line
+            output << "%-#{column_width}s#{separator}%s\n" % line
           end
         end
       end
