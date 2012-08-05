@@ -14,7 +14,7 @@ Usage:
 #{command_spec[:description]}
 #{command_spec[:long_description]}
         EOS
-        output.chomp
+        output.rstrip
       end
 
       # @see Thunder#help_list(commands)
