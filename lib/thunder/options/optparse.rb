@@ -1,4 +1,4 @@
-require "optparse"
+require 'optparse'
 
 module Thunder
   # Provides an adapter to the optparse library included in the Ruby std-lib
@@ -13,12 +13,12 @@ module Thunder
           opt = []
           opt << "-#{option_spec[:short]}"
           opt << if option_spec[:type] == Boolean
-            "--[no]#{name}"
+            "--[no-]#{name}"
           else
             "--#{name} OPT"
           end
           opt << option_spec[:type] unless option_spec[:type] == Boolean
-          opt << option_spec[:description]
+          opt << option_spec[:desc]
           parser.on(*opt) do |value|
             options[name] = value
           end

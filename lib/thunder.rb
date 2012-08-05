@@ -56,7 +56,7 @@ module Thunder
   #
   # @param args [<String>] the argument list to process
   # @param command_spec [Hash] the command specification to use
-  # @return [{Symbol => *}] the options
+  # @return [{Symbol => *},nil] the options
   def process_options(args, command_spec)
     return nil unless command_spec[:options]
 
@@ -195,7 +195,7 @@ module Thunder
       options[:name] = name
       options[:short] ||= name[0]
       options[:type] ||= Boolean
-      options[:description] ||= ""
+      options[:desc] ||= ""
       thunder[:options] ||= {}
       thunder[:options][name] = options
     end
