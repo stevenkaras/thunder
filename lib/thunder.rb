@@ -12,7 +12,7 @@ module Thunder
   # 
   # @param args [<String>] the command line arguments [ARGV]
   # @param options [{Symbol => *}] the default options to use [{}]
-  def start(args=ARGV, options={})
+  def start(args=ARGV.dup, options={})
     command_spec = determine_command(args)
 
     unless command_spec
@@ -204,11 +204,11 @@ module Thunder
 
     # Define a subcommand
     #
-    # @param command [String] the command that transfers processing to the provided handler
+    # @param command [Symbol,String] the command that transfers processing to the provided handler
     # @param handler [Thunder] the handler that processes the request
     def subcommand(command, handler)
-      method_added(command)
-      thunder[:commands][command][:subcommand] = handler
+      method_added(command.to_sym)
+      thunder[:commands][command.to_sym][:subcommand] = handler
     end
 
   end
