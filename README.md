@@ -2,9 +2,15 @@ Thunder
 =======
 Ruby gem for quick and easy command line interfaces
 
+Usage
+-----
+see 'sample' for a quick overview of all features
+
 Philosophy
 ----------
 The command line is the most basic interface we have with a computer. It makes sense that we should invest as much time and effort as possible to build tools to work with the command line, and tie into code we write as quickly as possible. Sadly, this has not taken place as much as one would expect. This library steps up to bridge the admittedly small gap between your standard shell and ruby code.
+
+While this is possible, and even easy using existing libraries, they either violate the principle of locality, or provide too many services.
 
 The overarching philosophy here is that a library should do one or two things, and do them extremely well.
 

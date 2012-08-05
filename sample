@@ -1,0 +1,40 @@
+#!/usr/bin/env ruby
+
+$:.unshift File.expand_path("../lib/", __FILE__)
+require 'thunder'
+require 'thunder/options/trollop'
+
+class Bar
+  include Thunder
+
+  desc "doit", "do something with the Bar class"
+  option :verb, type: Boolean, desc: "verbosity"
+  def doit(options={})
+    p options
+  end
+end
+
+class Foo
+  include Thunder
+
+  #options_processor TrollopAdapter
+
+  desc "bar A", "desc"
+  def bar(a)
+    p a
+  end
+
+  desc "baz [options]"
+  option :flag, type: Boolean, desc: "run with a flag"
+  option :some, type: String, desc: "something", default: "some default value"
+  def baz(options = {})
+    p options
+  end
+
+  desc "quux COMMAND...", "send COMMAND to Bar"
+  subcommand "quux", ::Bar.new
+
+end
+
+
+Foo.new.start

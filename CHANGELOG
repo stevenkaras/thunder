@@ -1,3 +1,12 @@
+v0.4.2
+- fixed boolean flags in default options processor
+- default help formatter now strips whitespace properly
+- all options now have optional arguments
++ default values are now set properly
++ added trollop adapter for option processing
++ improved documentation and help formatting for options
+- fixed handling of ARGV and subcommands
+
 v0.4.1
 - fixed fatal options processing bug
 
