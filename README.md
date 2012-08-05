@@ -4,6 +4,9 @@ Ruby gem for quick and easy command line interfaces
 
 Usage
 -----
+
+    gem install thunder
+
 see 'sample' for a quick overview of all features
 
 Philosophy
@@ -22,7 +25,7 @@ Phase 1: call a method from the command line
 Phase 2: provide options and arguments 
 Phase 3: provide help/banner formatter
 Phase 4: provide yardoc integration
-Phase 5: provide a bash-completion script.
+Phase 5: provide a bash-completion script
 Phase 6: ???
 Phase 7: Profit!
 

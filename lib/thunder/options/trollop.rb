@@ -1,6 +1,7 @@
 require 'trollop'
 
 module Thunder
+  # provides an adapter to the popular trollop option parsing library (requires trollop.rb be on the load path)
   class TrollopAdapter
     # @see Thunder#process_options
     def self.process_options(args, command_spec)
