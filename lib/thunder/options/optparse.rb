@@ -15,7 +15,7 @@ module Thunder
           opt << if option_spec[:type] == Boolean
             "--[no-]#{name}"
           else
-            "--#{name} OPT"
+            "--#{name} [OPT]"
           end
           opt << option_spec[:type] unless option_spec[:type] == Boolean
           opt << option_spec[:desc]
@@ -25,6 +25,13 @@ module Thunder
         end
       end
       command_spec[:options_processor].parse!(args)
+
+      # set default values
+      command_spec[:options].each do |name, option_spec|
+        next if options.has_key? name
+        next unless option_spec[:default]
+        options[name] = option_spec[:default]
+      end
 
       return options
     end
