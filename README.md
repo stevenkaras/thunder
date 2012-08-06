@@ -7,7 +7,7 @@ Usage
 
     gem install thunder
 
-see 'sample' for a quick overview of all features
+see '[sample](http://github.com/stevenkaras/thunder/blob/master/sample)' for a quick overview of all features
 
 Philosophy
 ----------
