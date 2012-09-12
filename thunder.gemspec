@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
 
   s.name        = 'thunder'
   s.summary     = "Thunder makes command lines apps easy!"
-  s.description = "Thor does everything and the kitchen sink. Thunder only does command line interfaces."
+  s.description = "Thunder does command line interfaces. Nothing more, nothing less."
 
   s.authors     = ["Steven Karas"]
   s.email       = 'steven.karas@gmail.com'
@@ -13,5 +13,5 @@ Gem::Specification.new do |s|
 
   s.files       =  []
   s.files       += Dir['lib/**/*.rb', 'spec/**/*.rb']
-  s.files       += Dir['[A-Z]*', 'README*', 'CHANGELOG']
+  s.files       += Dir['[A-Z]*', '[A-Z]*.*']
 end

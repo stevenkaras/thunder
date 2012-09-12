@@ -6,7 +6,6 @@ module Thunder
       # @see Thunder#help_command(command_spec)
       def help_command(command_spec)
         preamble = determine_preamble
-        #TODO: add options to output
         footer = ""
         footer << command_spec[:description] + "\n" if command_spec[:description]
         footer << command_spec[:long_description] + "\n" if command_spec[:long_description]

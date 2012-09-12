@@ -1,3 +1,6 @@
+v0.4.3
+- fixed handling of parameters and default commands
+
 v0.4.2
 - fixed boolean flags in default options processor
 - default help formatter now strips whitespace properly
