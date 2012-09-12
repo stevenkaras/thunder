@@ -48,7 +48,11 @@ module Thunder
     end
     command_name = args.first.to_sym
     command_spec = self.class.thunder[:commands][command_name]
-    args.shift if command_spec
+    if command_spec
+      args.shift
+    else
+      command_spec = self.class.thunder[:commands][self.class.thunder[:default_command]]
+    end
     return command_spec
   end
 
