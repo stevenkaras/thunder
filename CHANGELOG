@@ -1,3 +1,6 @@
+v0.4.4
+- fixed minor bug in processing of commands that caused a crash when seeking help
+
 v0.4.3
 - fixed handling of parameters and default commands
 

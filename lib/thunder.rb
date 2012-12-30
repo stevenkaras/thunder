@@ -135,7 +135,7 @@ module Thunder
     # Registers a method as a thunder task
     def method_added(method)
       attributes = [:usage, :description, :options, :long_description]
-      return unless attributes.reduce { |a, key| a || thunder[key] }
+      return unless attributes.reduce(nil) { |a, key| a || thunder[key] }
       thunder[:commands][method] = {
         name: method,
       }
