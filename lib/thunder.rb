@@ -9,7 +9,7 @@ module Thunder
 
   # Start the object as a command line program,
   # processing the given arguments and using the provided options.
-  # 
+  #
   # @param args [<String>] the command line arguments [ARGV]
   # @param options [{Symbol => *}] the default options to use [{}]
   def start(args=ARGV.dup, options={})
@@ -144,7 +144,7 @@ module Thunder
         thunder[key] = nil
       end
     end
-    
+
     # Set the options processor.
     #
     # @param processor [#process_options]
@@ -183,7 +183,7 @@ module Thunder
     end
 
     # Define an option for the next method (or subcommand)
-    # 
+    #
     # @param name [Symbol,String] the long name of this option
     # @option options :short [String] the short version of the option [the first letter of the option name]
     # @option options :type [Class] the datatype of this option [Boolean]
