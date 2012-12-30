@@ -25,7 +25,7 @@ class Foo
   end
 
   desc "baz [options]"
-  option :flag, type: Boolean, desc: "run with a flag"
+  option :flag, type: Boolean, short: "g", desc: "run with a flag"
   option :some, type: String, desc: "something", default: "some default value"
   def baz(options = {})
     p options
