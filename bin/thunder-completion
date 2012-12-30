@@ -1,0 +1,64 @@
+#!/usr/bin/env ruby
+
+# shift in the lib, if we're working locally
+$:.unshift File.expand_path("../../lib/", __FILE__)
+
+require 'thunder'
+require 'erb'
+
+def thunder_commands(bolt)
+  bolt[:commands].map(&:first).map(&:to_s)
+end
+
+def thunder_options(command)
+  return nil unless command[:options]
+
+  result = []
+  command[:options].each do |opt, option|
+    result << "--#{opt}"
+    next unless option[:short]
+    result << "-#{option[:short]}"
+  end
+  return result
+end
+
+module Thunder
+  def start(args=ARGV.dup, options={})
+    template = ERB.new <<-TEMPLATE, nil, "%"
+#!/bin/bash
+
+% progname = File.basename(ARGV.first)
+__<%= progname %>_command_list() {
+  echo "<%= thunder_commands(thunder).join(" ") %>"
+}
+
+#TODO: get the options to be completed as well
+% thunder[:commands].each do |name, command|
+%   next unless command[:options]
+__<%= progname %>_<%= name.to_s %>_options_list() {
+  echo "<%= thunder_options(command).join(" ") %>"
+}
+% end
+
+__<%= progname %>_complete() {
+    COMPREPLY=($(compgen -W "$(__<%= progname %>_command_list)" -- ${COMP_WORDS[COMP_CWORD]}))
+}
+
+complete -o default -o nospace -F __<%= progname %>_complete <%= progname %>
+
+    TEMPLATE
+    context = (proc { |thiz, thunder|
+      binding
+    }).call(self, self.class.thunder)
+    puts template.result(context)
+  end
+end
+
+if ARGV.size != 1
+  puts "Usage: thunder-completion THUNDER_SCRIPT"
+  puts
+  puts "Prints out the suggested template for a bash completion script for the given thunder script"
+  exit 1
+end
+
+load File.expand_path(ARGV.first)
