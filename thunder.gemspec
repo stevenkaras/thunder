@@ -14,4 +14,7 @@ Gem::Specification.new do |s|
   s.files       =  []
   s.files       += Dir['lib/**/*.rb', 'spec/**/*.rb']
   s.files       += Dir['[A-Z]*', '[A-Z]*.*']
+
+  s.bindir      = 'bin'
+  s.executables = Dir['bin/*'].map { |e| File.basename(e) }
 end
