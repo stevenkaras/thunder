@@ -26,15 +26,16 @@ module Thunder
 
 % progname = File.basename(ARGV.first)
 __<%= progname %>_command_list() {
-  echo "<%= thunder_commands(thunder).join(" ") %>"
+    echo "<%= thunder_commands(thunder).join(" ") %>"
 }
 
 #TODO: get the options to be completed as well
 % thunder[:commands].each do |name, command|
-%   next unless command[:options]
+%   if command[:options]
 __<%= progname %>_<%= name.to_s %>_options_list() {
-  echo "<%= thunder_options(command).join(" ") %>"
+    echo "<%= thunder_options(command).join(" ") %>"
 }
+%   end
 % end
 
 __<%= progname %>_complete() {
