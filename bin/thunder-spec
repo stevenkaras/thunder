@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+
+require 'thunder'
+require 'pp'
+
+module Thunder
+  def start(args=ARGV.dup, options={})
+    pp self.class.thunder
+  end
+end
+
+if ARGV.size != 1
+  puts "Usage: thunder-spec THUNDER_SCRIPT"
+  puts
+  puts "Dumps the thunder spec to the command line for debugging and analysis"
+  exit 1
+end
+
+load File.expand_path(ARGV.first)
