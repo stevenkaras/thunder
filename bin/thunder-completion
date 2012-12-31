@@ -1,8 +1,5 @@
 #!/usr/bin/env ruby
 
-# shift in the lib, if we're working locally
-$:.unshift File.expand_path("../../lib/", __FILE__)
-
 require 'thunder'
 require 'erb'
 
