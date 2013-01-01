@@ -65,7 +65,7 @@ complete -o default -o nospace -F __<%= progname %>_complete <%= progname %>
 end
 
 if ARGV.size != 1
-  puts "Usage: thunder-completion THUNDER_SCRIPT"
+  puts "Usage: #{File.basename(__FILE__)} THUNDER_SCRIPT"
   puts
   puts "Prints out the suggested template for a bash completion script for the given thunder script"
   exit 1

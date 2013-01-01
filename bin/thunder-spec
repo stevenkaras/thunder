@@ -18,7 +18,7 @@ def renderThunderSpec(spec)
 end
 
 if ARGV.size != 1
-  puts "Usage: thunder-spec THUNDER_SCRIPT"
+  puts "Usage: #{File.basename(__FILE__)} THUNDER_SCRIPT"
   puts
   puts "Dumps the thunder spec to the command line for debugging and analysis"
   exit 1
