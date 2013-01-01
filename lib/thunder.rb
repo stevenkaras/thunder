@@ -29,7 +29,8 @@ module Thunder
       return command_spec[:subcommand].start(args, options)
     elsif parsed_options
       #TODO: do arity check
-      return send command_spec[:name], *args, options
+      args << options
+      return send command_spec[:name], *args
     else
       #TODO: do arity check
       return send command_spec[:name], *args
@@ -117,15 +118,15 @@ module Thunder
     # Get the thunder configuration
     def thunder
       @thunder ||= {
-        default_command: :help,
-        commands: {
-          help: {
-            name: :help,
-            usage: "help [COMMAND]",
-            description: "list available commands or describe a specific command",
-            long_description: nil,
-            options: nil,
-            default_help: true
+        :default_command => :help,
+        :commands => {
+          :help => {
+            :name => :help,
+            :usage => "help [COMMAND]",
+            :description => "list available commands or describe a specific command",
+            :long_description => nil,
+            :options => nil,
+            :default_help => true
           },
         }
       }
@@ -135,7 +136,7 @@ module Thunder
     # Registers a method as a thunder task
     def method_added(method)
       add_command(method.to_sym)
-      thunder[:commands][method][:params] = instance_method(method).parameters
+      # thunder[:commands][method][:params] = instance_method(method).parameters
     end
 
     # Set the options processor.
@@ -191,7 +192,7 @@ module Thunder
     def option(name, options={})
       name = name.to_sym
       options[:name] = name
-      options[:short] ||= name[0]
+      options[:short] ||= name.to_s[0,1]
       options[:type] ||= Boolean
       options[:desc] ||= ""
       thunder[:options] ||= {}
@@ -212,7 +213,7 @@ module Thunder
       attributes = [:usage, :description, :options, :long_description]
       return unless attributes.reduce(nil) { |a, key| a || thunder[key] }
       thunder[:commands][command] = {
-        name: command,
+        :name => command,
       }
       attributes.each do |key|
         thunder[:commands][command][key] = thunder.delete(key)

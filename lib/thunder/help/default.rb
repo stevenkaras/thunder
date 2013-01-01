@@ -54,7 +54,7 @@ Usage:
       end
 
       # determine the preamble
-      # 
+      #
       # @return [String] the preamble
       def determine_preamble
         preamble = "#{File.basename($0)}"
@@ -80,12 +80,12 @@ Usage:
       # @param separator [String]
       # @return [String] a two-column table
       def render_table(data, separator = " # ")
-        column_width = data.group_by do |data|
-          data.first.size
+        column_width = data.group_by do |row|
+          row.first.size
         end.max.first
         "".tap do |output|
-          data.each do |line|
-            output << "%-#{column_width}s#{separator}%s\n" % line
+          data.each do |row|
+            output << "%-#{column_width}s#{separator}%s\n" % row
           end
         end
       end

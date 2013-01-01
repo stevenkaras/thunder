@@ -6,7 +6,6 @@ module Thunder
     # @see Thunder#process_options
     def self.process_options(args, command_spec)
       return {} unless command_spec[:options]
-
       options = {}
       command_spec[:options_processor] ||= OptionParser.new do |parser|
         command_spec[:options].each do |name, option_spec|
