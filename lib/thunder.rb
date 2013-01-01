@@ -134,15 +134,8 @@ module Thunder
     # @api private
     # Registers a method as a thunder task
     def method_added(method)
-      attributes = [:usage, :description, :options, :long_description]
-      return unless attributes.reduce(nil) { |a, key| a || thunder[key] }
-      thunder[:commands][method] = {
-        name: method,
-      }
-      attributes.each do |key|
-        thunder[:commands][method][key] = thunder[key]
-        thunder[key] = nil
-      end
+      add_command(method.to_sym)
+      thunder[:commands][method][:params] = instance_method(method).parameters
     end
 
     # Set the options processor.
@@ -196,7 +189,6 @@ module Thunder
     # @example
     #   option "verbose", desc: "print extra information"
     def option(name, options={})
-    #TODO: have this generate YARDoc for the option (as it should match a method option)
       name = name.to_sym
       options[:name] = name
       options[:short] ||= name[0]
@@ -211,9 +203,20 @@ module Thunder
     # @param command [Symbol,String] the command that transfers processing to the provided handler
     # @param handler [Thunder] the handler that processes the request
     def subcommand(command, handler)
-      method_added(command.to_sym)
+      add_command(command.to_sym)
       thunder[:commands][command.to_sym][:subcommand] = handler
     end
 
+    private
+    def add_command(command)
+      attributes = [:usage, :description, :options, :long_description]
+      return unless attributes.reduce(nil) { |a, key| a || thunder[key] }
+      thunder[:commands][command] = {
+        name: command,
+      }
+      attributes.each do |key|
+        thunder[:commands][command][key] = thunder.delete(key)
+      end
+    end
   end
 end
