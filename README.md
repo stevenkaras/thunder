@@ -7,6 +7,10 @@ Usage
 
     gem install thunder
 
+or if you're running [ruby 1.8.7](http://www.ruby-lang.org/en/news/2011/10/06/plans-for-1-8-7):
+
+    gem install thunder-1.8.7
+
 see '[sample](http://github.com/stevenkaras/thunder/blob/master/sample)' for a quick overview of all features
 
 Philosophy
