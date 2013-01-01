@@ -5,8 +5,16 @@ require 'pp'
 
 module Thunder
   def start(args=ARGV.dup, options={})
-    pp self.class.thunder
+    spec = self.class.thunder
+    pp renderThunderSpec(spec)
   end
+end
+
+def renderThunderSpec(spec)
+  spec[:commands].each do |name, command|
+    command[:subcommand] = renderThunderSpec(command[:subcommand].class.thunder) if command[:subcommand]
+  end
+  spec
 end
 
 if ARGV.size != 1
