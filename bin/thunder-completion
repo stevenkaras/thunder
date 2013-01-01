@@ -25,21 +25,33 @@ module Thunder
 #!/bin/bash
 
 % progname = File.basename(ARGV.first)
-__<%= progname %>_command_list() {
+__<%= progname %>_commands() {
     echo "<%= thunder_commands(thunder).join(" ") %>"
 }
-
-#TODO: get the options to be completed as well
 % thunder[:commands].each do |name, command|
+%   name = name.to_s
 %   if command[:options]
-__<%= progname %>_<%= name.to_s %>_options_list() {
+
+__<%= progname %>_<%= name %>_options() {
     echo "<%= thunder_options(command).join(" ") %>"
 }
 %   end
 % end
 
 __<%= progname %>_complete() {
-    COMPREPLY=($(compgen -W "$(__<%= progname %>_command_list)" -- ${COMP_WORDS[COMP_CWORD]}))
+  local words=""
+    if [[ ${COMP_WORDS[COMP_CWORD]:0:1} == "-" ]]; then
+        if ((COMP_CWORD == 1)); then
+            words=
+        else
+            local command="__<%= progname %>_${COMP_WORDS[1]}_options"
+            words=$($command)
+        fi
+    elif ((COMP_CWORD == 1)); then
+        # display only commands
+        words=$(__<%= progname %>_commands)
+    fi
+    COMPREPLY=($(compgen -W "$words" -- ${COMP_WORDS[COMP_CWORD]}))
 }
 
 complete -o default -o nospace -F __<%= progname %>_complete <%= progname %>
