@@ -3,8 +3,8 @@
 require 'thunder'
 require 'erb'
 
-def thunder_commands(bolt)
-  bolt[:commands].map(&:first).map(&:to_s)
+def thunder_commands(spec)
+  spec[:commands].map(&:first).map(&:to_s)
 end
 
 def thunder_options(command)
@@ -19,53 +19,63 @@ def thunder_options(command)
   return result
 end
 
+def indent(text, amount, indent=" ")
+  result = ""
+  text.lines do |line|
+    result << indent * amount + line
+  end
+  return result
+end
+
+def thunder_completion(depth, spec)
+    template = ERB.new <<-TEMPLATE, nil, "%>"
+if ((COMP_CWORD == <%= depth+1 %>)); then
+    # display only commands
+    words="<%= thunder_commands(spec).join(" ") %>"
+else
+    case ${COMP_WORDS[<%= depth+1 %>]} in
+% spec[:commands].each do |name, command|
+%   name = name.to_s
+    <%= name %>)
+%   if name == "help"
+        words="<%= thunder_commands(spec).join(" ") %>"
+%   end
+%   if command[:options]
+        if [[ ${COMP_WORDS[COMP_CWORD]:0:1} == "-" ]]; then
+            words="<%= thunder_options(command).join(" ") %>"
+        fi
+%   end
+%   if command[:subcommand]
+<%= indent(thunder_completion(depth+1, command[:subcommand].class.thunder), 8) %>
+%   end
+        ;;
+% end
+    esac
+fi
+    TEMPLATE
+    return template.result(binding)
+end
+
 module Thunder
   def start(args=ARGV.dup, options={})
-    template = ERB.new <<-TEMPLATE, nil, "%"
+    template = ERB.new <<-TEMPLATE, nil, "%>"
 #!/bin/bash
 
 % progname = File.basename(ARGV.first)
-__<%= progname %>_commands() {
-    echo "<%= thunder_commands(thunder).join(" ") %>"
-}
-% thunder[:commands].each do |name, command|
-%   name = name.to_s
-%   if command[:options]
-
-__<%= progname %>_<%= name %>_options() {
-    echo "<%= thunder_options(command).join(" ") %>"
-}
-%   end
-% end
-
-__<%= progname %>_complete() {
-  local words=""
-    if [[ ${COMP_WORDS[COMP_CWORD]:0:1} == "-" ]]; then
-        if ((COMP_CWORD == 1)); then
-            words=
-        else
-            local command="__<%= progname %>_${COMP_WORDS[1]}_options"
-            words=$($command)
-        fi
-    elif ((COMP_CWORD == 1)); then
-        # display only commands
-        words=$(__<%= progname %>_commands)
-    fi
+__<%= progname %>_completion() {
+    local words=""
+<%= indent(thunder_completion(0, self.class.thunder), 4) %>
     COMPREPLY=($(compgen -W "$words" -- ${COMP_WORDS[COMP_CWORD]}))
 }
 
-complete -o default -o nospace -F __<%= progname %>_complete <%= progname %>
-
+complete -o default -o nospace -F __<%= progname %>_completion <%= progname %>
     TEMPLATE
-    context = (proc { |thiz, thunder|
-      binding
-    }).call(self, self.class.thunder)
-    puts template.result(context)
+    puts template.result(binding)
   end
 end
 
 if ARGV.size != 1
-  puts "Usage: thunder-completion THUNDER_SCRIPT"
+  puts "Usage: #{File.basename(__FILE__)} THUNDER_SCRIPT"
   puts
   puts "Prints out the suggested template for a bash completion script for the given thunder script"
   exit 1
