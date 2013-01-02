@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 $:.unshift File.expand_path("../lib/", __FILE__)
+require 'rubygems'
 require 'thunder'
 require 'thunder/options/trollop'
 
@@ -8,7 +9,7 @@ class Bar
   include Thunder
 
   desc "doit", "do something with the Bar class"
-  option :verb, type: Boolean, desc: "verbosity"
+  option :verb, :type => Boolean, :desc => "verbosity"
   def doit(options={})
     p options
   end
@@ -25,8 +26,8 @@ class Foo
   end
 
   desc "baz [options]"
-  option :flag, type: Boolean, short: "g", desc: "run with a flag"
-  option :some, type: String, desc: "something", default: "some default value"
+  option :flag, :type => Boolean, :short => "g", :desc => "run with a flag"
+  option :some, :type => String, :desc => "something", :default => "some default value"
   def baz(options = {})
     p options
   end
