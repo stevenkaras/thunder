@@ -27,13 +27,30 @@ module Thunder
     options.merge!(parsed_options) if parsed_options
     if command_spec[:subcommand]
       return command_spec[:subcommand].start(args, options)
-    elsif parsed_options
-      #TODO: do arity check
-      return send command_spec[:name], *args, options
-    else
-      #TODO: do arity check
-      return send command_spec[:name], *args
     end
+    if parsed_options
+      args << options
+    end
+
+    if command_spec[:params]
+      min = command_spec[:params].count { |param| param.first == :req}
+      if args.size < min
+        ARGV.insert((ARGV.size - args.size) - 1, "help")
+        puts help_command(command_spec)
+        return
+      end
+      max = if command_spec[:params].map(&:first).include?(:rest)
+        nil
+      else
+        command_spec[:params].size
+      end
+      if !max.nil? && args.size > max
+        ARGV.insert((ARGV.size - args.size) - 1, "help")
+        puts help_command(command_spec)
+        return
+      end
+    end
+    return send command_spec[:name], *args
   end
 
   protected
@@ -76,10 +93,6 @@ module Thunder
   # @param args [<String>] the arguments list
   # @param options [Hash] any included options
   def get_help(args, options)
-    unless self.class.thunder[:help_formatter]
-      require 'thunder/help/default'
-      self.class.thunder[:help_formatter] = Thunder::DefaultHelp
-    end
     if args.size == 0
       puts help_list(self.class.thunder[:commands])
     else
@@ -92,6 +105,10 @@ module Thunder
   # @param commands [<Hash>] the commands to list
   # @return [String] the rendered help
   def help_list(commands)
+    unless self.class.thunder[:help_formatter]
+      require 'thunder/help/default'
+      self.class.thunder[:help_formatter] = Thunder::DefaultHelp
+    end
     self.class.thunder[:help_formatter].help_list(commands)
   end
 
@@ -100,6 +117,10 @@ module Thunder
   # @param command_spec [Hash] the command to render detailed help for
   # @return [String] the rendered help
   def help_command(command_spec)
+    unless self.class.thunder[:help_formatter]
+      require 'thunder/help/default'
+      self.class.thunder[:help_formatter] = Thunder::DefaultHelp
+    end
     self.class.thunder[:help_formatter].help_command(command_spec)
   end
 
