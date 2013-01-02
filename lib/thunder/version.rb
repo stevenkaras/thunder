@@ -1,4 +1,4 @@
 module Thunder
   # Version string for gemspec
-  VERSION = "0.5.3"
+  VERSION = "0.6.0"
 end
