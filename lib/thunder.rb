@@ -155,8 +155,9 @@ module Thunder
     # @api private
     # Registers a method as a thunder task
     def method_added(method)
-      add_command(method.to_sym)
-      thunder[:commands][method][:params] = instance_method(method).parameters
+      add_command(method.to_sym) do |command|
+        command[:params] = instance_method(method).parameters
+      end
     end
 
     # Set the options processor.
@@ -224,12 +225,13 @@ module Thunder
     # @param command [Symbol,String] the command that transfers processing to the provided handler
     # @param handler [Thunder] the handler that processes the request
     def subcommand(command, handler)
-      add_command(command.to_sym)
-      thunder[:commands][command.to_sym][:subcommand] = handler
+      add_command(command.to_sym) do |subcommand|
+        subcommand[:subcommand] = handler
+      end
     end
 
     private
-    def add_command(command)
+    def add_command(command, &block)
       attributes = [:usage, :description, :options, :long_description]
       return unless attributes.reduce(nil) { |a, key| a || thunder[key] }
       thunder[:commands][command] = {
@@ -237,6 +239,13 @@ module Thunder
       }
       attributes.each do |key|
         thunder[:commands][command][key] = thunder.delete(key)
+      end
+      if block
+        if block.arity == 0
+          block.call
+        else
+          block.call thunder[:commands][command]
+        end
       end
     end
   end
