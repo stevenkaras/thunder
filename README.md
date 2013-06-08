@@ -2,6 +2,8 @@
 =======
 Ruby gem for quick and easy command line interfaces
 
+[![Code Climate](https://codeclimate.com/github/stevenkaras/thunder.png)](https://codeclimate.com/github/stevenkaras/thunder)
+
 Usage
 -----
 
