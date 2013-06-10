@@ -31,6 +31,22 @@ class Foo
     p options
   end
 
+  desc "splat", ""
+  def splat(a, b, *args)
+  end
+
+  desc "defs", ""
+  def defs(a = 1, b = 2, c = 3)
+  end
+
+  desc "block", ""
+  def block(a, &block)
+  end
+
+  desc "complex", ""
+  def complex(a, b = 2, *args, &block)
+  end
+
   desc "quux COMMAND...", "send COMMAND to Bar"
   subcommand "quux", ::Bar.new
 
