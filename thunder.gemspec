@@ -3,7 +3,7 @@ require File.expand_path("../lib/thunder/version", __FILE__)
 Gem::Specification.new do |s|
   s.version     = Thunder::VERSION
 
-  s.name        = 'thunder'
+  s.name        = 'thunder-1.9.3'
   s.summary     = "Thunder makes command lines apps easy!"
   s.description = "Thunder does command line interfaces. Nothing more, nothing less."
 
