@@ -2,12 +2,17 @@
 =======
 Ruby gem for quick and easy command line interfaces
 
+[![Gem Version](https://badge.fury.io/rb/thunder.png)](http://badge.fury.io/rb/thunder)
 [![Code Climate](https://codeclimate.com/github/stevenkaras/thunder.png)](https://codeclimate.com/github/stevenkaras/thunder)
 
 Usage
 -----
 
     gem install thunder
+
+or if you're running ruby 1.9.3:
+
+    gem install thunder-1.9.3
 
 or if you're running [ruby 1.8.7](http://www.ruby-lang.org/en/news/2011/10/06/plans-for-1-8-7):
 
