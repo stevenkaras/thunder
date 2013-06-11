@@ -105,11 +105,7 @@ module Thunder
   # @param commands [<Hash>] the commands to list
   # @return [String] the rendered help
   def help_list(commands)
-    unless self.class.thunder[:help_formatter]
-      require 'thunder/help/default'
-      self.class.thunder[:help_formatter] = Thunder::DefaultHelp
-    end
-    self.class.thunder[:help_formatter].help_list(commands)
+    self.class.get_help_formatter.help_list(commands)
   end
 
   # Render detailed help on a specific command
@@ -117,11 +113,7 @@ module Thunder
   # @param command_spec [Hash] the command to render detailed help for
   # @return [String] the rendered help
   def help_command(command_spec)
-    unless self.class.thunder[:help_formatter]
-      require 'thunder/help/default'
-      self.class.thunder[:help_formatter] = Thunder::DefaultHelp
-    end
-    self.class.thunder[:help_formatter].help_command(command_spec)
+    self.class.get_help_formatter.help_command(command_spec)
   end
 
   public
@@ -150,6 +142,14 @@ module Thunder
           },
         }
       }
+    end
+
+    def get_help_formatter
+      unless thunder[:help_formatter]
+        require 'thunder/help/default'
+        thunder[:help_formatter] = Thunder::DefaultHelp
+      end
+      thunder[:help_formatter]
     end
 
     # @api private
