@@ -32,9 +32,21 @@
 
 <p>Ruby gem for quick and easy command line interfaces</p>
 
+<p><a href="http://badge.fury.io/rb/thunder"><img title="Gem Version" src="https://badge.fury.io/rb/thunder.png" /></a><a href="https://codeclimate.com/github/stevenkaras/thunder"><img title="Code Climate" src="https://codeclimate.com/github/stevenkaras/thunder.png"/></a></p>
+
 <h2>Usage</h2>
 
 <pre><code>gem install thunder
+</code></pre>
+
+<p>or if you're running ruby 1.9.3:</p>
+
+<pre><code>gem install thunder-1.9.3
+</code></pre>
+
+<p>or if you're running <a href="http://www.ruby-lang.org/en/news/2011/10/06/plans-for-1-8-7">ruby 1.8.7</a></p>
+
+<pre><code>gem install thunder-1.8.7
 </code></pre>
 
 <p>see '<a href="https://github.com/stevenkaras/thunder/blob/master/sample">sample</a>' for a quick overview of all features</p>
@@ -51,15 +63,17 @@
 
 <p>Provide a simple, DRY syntatic sugar library that provides the necessary services to create command line mappings to ruby methods. It will not provide any other services.</p>
 
-<p>Development phases:</p>
+<p>Notable features as of the current release:</p>
 
 <ol>
-<li>call a method from the command line</li>
-<li>provide options and arguments </li>
-<li>provide help/banner formatter</li>
-<li>provide yardoc integration</li>
-<li>provide a bash-completion script</li>
-</ol><h2>Development</h2>
+<li>options parsing for commands</li>
+<li>default commands </li>
+<li>subcommands (ala git)</li>
+<li>integrated help system</li>
+<li>bash completion script generator</li>
+</ol>
+
+<h2>Development</h2>
 
 <p>If you'd like to contribute, fork, commit, and request a pull. I'll get around to it. No special dependencies, or anything fancy</p>
 
@@ -73,6 +87,6 @@
       </footer>
     </div>
     <script src="javascripts/scale.fix.js"></script>
-    
+
   </body>
 </html>
