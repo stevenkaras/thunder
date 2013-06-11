@@ -10,14 +10,11 @@ module Thunder
   # Start the object as a command line program,
   # processing the given arguments and using the provided options.
   #
-  # @param args [<String>] the command line arguments [ARGV]
-  # @param options [{Symbol => *}] the default options to use [{}]
+  # @param args [<String>] (ARGV) the command line arguments
+  # @param options [{Symbol => *}] ({}) the default options to use
   def start(args=ARGV.dup, options={})
     command_spec = determine_command(args)
-
-    unless command_spec
-      return
-    end
+    return unless command_spec
 
     if command_spec[:name] == :help && command_spec[:default_help]
       return get_help(args, options)
@@ -25,12 +22,10 @@ module Thunder
 
     parsed_options = process_options(args, command_spec)
     options.merge!(parsed_options) if parsed_options
-    if command_spec[:subcommand]
-      return command_spec[:subcommand].start(args, options)
-    end
-    if parsed_options
-      args << options
-    end
+
+    return command_spec[:subcommand].start(args, options) if command_spec[:subcommand]
+
+    args << options if parsed_options
 
     if command_spec[:params]
       min = command_spec[:params].count { |param| param.first == :req}
