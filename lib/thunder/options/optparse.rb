@@ -11,12 +11,12 @@ module Thunder::OptParseAdapter
       command_spec[:options].each do |name, option_spec|
         opt = []
         opt << "-#{option_spec[:short]}"
-        opt << if option_spec[:type] == Boolean
+        opt << if option_spec[:type] == Thunder::Boolean
           "--[no-]#{name}"
         else
           "--#{name} [#{name.to_s.upcase}]"
         end
-        opt << option_spec[:type] unless option_spec[:type] == Boolean
+        opt << option_spec[:type] unless option_spec[:type] == Thunder::Boolean
         opt << option_spec[:desc]
         parser.on(*opt) do |value|
           options[name] = value
