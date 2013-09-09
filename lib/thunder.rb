@@ -77,7 +77,7 @@ module Thunder
     return nil unless command_spec[:options]
 
     unless self.class.thunder[:options_processor]
-      require 'thunder/options/optparse'
+      require File.expand_path("../thunder/options/optparse", __FILE__)
       self.class.thunder[:options_processor] = Thunder::OptParseAdapter
     end
     self.class.thunder[:options_processor].process_options(args, command_spec)
@@ -141,7 +141,7 @@ module Thunder
 
     def get_help_formatter
       unless thunder[:help_formatter]
-        require 'thunder/help/default'
+        require File.expand_path("../thunder/help/default", __FILE__)
         thunder[:help_formatter] = Thunder::DefaultHelp
       end
       thunder[:help_formatter]
