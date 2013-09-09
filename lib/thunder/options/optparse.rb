@@ -28,7 +28,7 @@ module Thunder::OptParseAdapter
     # set default values
     command_spec[:options].each do |name, option_spec|
       next if options.has_key? name
-      next unless option_spec[:default]
+      next unless option_spec.has_key? :default
       options[name] = option_spec[:default]
     end
 
