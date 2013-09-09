@@ -12,7 +12,7 @@ module Thunder
   #
   # @param args [<String>] (ARGV) the command line arguments
   # @param options [{Symbol => *}] ({}) the default options to use
-  def start(args=ARGV.dup, options={})
+  def start(args = ARGV.dup, options = {})
     command_spec = determine_command(args)
     return unless command_spec
 
@@ -88,7 +88,7 @@ module Thunder
   # @param args [<String>] the arguments list
   # @param options [Hash] any included options
   def get_help(args, options)
-    if args.size == 0
+    if args.empty?
       puts help_list(self.class.thunder[:commands])
     else
       puts help_command(determine_command(args))
