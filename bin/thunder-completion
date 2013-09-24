@@ -7,11 +7,9 @@ def thunder_commands(spec)
   spec[:commands].map(&:first).map(&:to_s)
 end
 
-def thunder_options(command)
-  return nil unless command[:options]
-
+def thunder_options(spec)
   result = []
-  command[:options].each do |opt, option|
+  spec.each do |opt, option|
     result << "--#{opt}"
     next unless option[:short]
     result << "-#{option[:short]}"
@@ -27,8 +25,38 @@ def indent(text, amount, indent=" ")
   return result
 end
 
+def thunder_completion_options(spec)
+  default_template = ERB.new <<-TEMPLATE, nil, "%>"
+if [[ ${COMP_WORDS[COMP_CWORD]:0:1} == "-" ]]; then
+    words="<%= thunder_options(spec).join(" ") %>"
+fi
+  TEMPLATE
+  default_template.filename="thunder-completion-options"
+  default_template = default_template.result(binding)
+  template = ERB.new <<-TEMPLATE, nil, "%>"
+% complex_options = false
+% complex_options = true if spec.values.any? { |option| option[:type] != Thunder::Boolean }
+% if complex_options
+case $previous_word; in
+%   spec.select { |name, option| option[:type] != Thunder::Boolean }.each do |name, option|
+    <%= ["--"+name.to_s, option[:short] ? "-"+option[:short].to_s : nil ].compact.join("|") %>)
+        # placeholder for proper completion
+        ;;
+%   end
+    *)
+<%= indent(default_template, 8) %>
+        ;;
+esac
+% else
+<%= default_template %>
+% end
+  TEMPLATE
+  template.filename="thunder-completion-options-complex"
+  return template.result(binding)
+end
+
 def thunder_completion(depth, spec)
-    template = ERB.new <<-TEMPLATE, nil, "%>"
+  template = ERB.new <<-TEMPLATE, nil, "%>"
 if ((COMP_CWORD == <%= depth+1 %>)); then
     # display only commands
     words="<%= thunder_commands(spec).join(" ") %>"
@@ -41,9 +69,7 @@ else
         words="<%= thunder_commands(spec).join(" ") %>"
 %   end
 %   if command[:options]
-        if [[ ${COMP_WORDS[COMP_CWORD]:0:1} == "-" ]]; then
-            words="<%= thunder_options(command).join(" ") %>"
-        fi
+<%= indent(thunder_completion_options(command[:options]), 8) %>
 %   end
 %   if command[:subcommand]
 <%= indent(thunder_completion(depth+1, command[:subcommand].class.thunder), 8) %>
@@ -52,8 +78,9 @@ else
 % end
     esac
 fi
-    TEMPLATE
-    return template.result(binding)
+  TEMPLATE
+  template.filename="thunder-completion-main-#{depth}"
+  return template.result(binding)
 end
 
 module Thunder
@@ -63,13 +90,23 @@ module Thunder
 
 % progname = File.basename(ARGV.first)
 __<%= progname %>_completion() {
+    local current_word=${COMP_WORDS[COMP_CWORD]}
+    local previous_word=${COMP_WORDS[COMP_CWORD-1]}
+    local all_words=("${COMP_WORDS[@]}")
+    local which_word=$COMP_CWORD
+    if [[ $current_word == *"="* ]]; then
+        previous_word=${current_word%=*}
+        current_word=${current_word#*=}
+    fi
+
     local words=""
 <%= indent(thunder_completion(0, self.class.thunder), 4) %>
-    COMPREPLY=($(compgen -W "$words" -- ${COMP_WORDS[COMP_CWORD]}))
+    COMPREPLY=($(compgen -W "$words" -- $current_word))
 }
 
 complete -o default -o nospace -F __<%= progname %>_completion <%= progname %>
     TEMPLATE
+    template.filename="thunder-complete-start"
     puts template.result(binding)
   end
 end
