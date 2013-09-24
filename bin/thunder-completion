@@ -27,7 +27,7 @@ end
 
 def thunder_completion_options(spec)
   default_template = ERB.new <<-TEMPLATE, nil, "%>"
-if [[ ${COMP_WORDS[COMP_CWORD]:0:1} == "-" ]]; then
+if [[ $current_word == "-" ]]; then
     words="<%= thunder_options(spec).join(" ") %>"
 fi
   TEMPLATE
@@ -57,7 +57,7 @@ end
 
 def thunder_completion(depth, spec)
   template = ERB.new <<-TEMPLATE, nil, "%>"
-if ((COMP_CWORD == <%= depth+1 %>)); then
+if (($which_word == <%= depth+1 %>)); then
     # display only commands
     words="<%= thunder_commands(spec).join(" ") %>"
 else
