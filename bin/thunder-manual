@@ -1,0 +1,65 @@
+#!/usr/bin/env ruby
+
+require File.expand_path("../../lib/thunder", __FILE__)
+require 'erb'
+
+def generate_man_page(script_name, spec)
+  template = ERB.new <<-TEMPLATE, nil, "%"
+.TH <%= script_name.upcase %> 1 "<%= Time.new.strftime("%d %b %Y") %>" "<%= script_name.to_s %> 1.0" "<%= script_name.to_s %> Manual"
+.SH NAME
+<%= script_name %> \\- very short summary of your program
+.SH SYNOPSIS
+% spec[:commands].each do |_, command|
+.PP
+.B <%= script_name %> <%= command[:name].to_s %>
+%   (command[:params] || []).each do |type, param|
+%     next if command[:options] and param == :options
+%     case type
+%     when :req
+.I <%= param.to_s %>
+%     when :opt
+[ \\fI<%= param.to_s %>\\fR ]
+%     when :rest
+[ \\fI<%= param.to_s %>\\fR... ]
+%     when :block
+%     end
+%   end
+%   (command[:options] || []).each do |_, option|
+[ \\fB\\-\\-<%= option[:name] %><%= " \\\\fI"+option[:name].to_s unless option[:type] == Thunder::Boolean %> \\fR]
+%   end
+% end
+.SH DESCRIPTION
+<%= script_name %> prints the string "Hello world" on standard output.
+.SH COMMANDS
+% spec[:commands].each do |_, command|
+.SS "<%= command[:name].to_s %>"
+<%= command[:description] unless command[:description].empty? %>
+<%= (command[:long_description] || "").split(".").join(".\n") %>
+%   (command[:options] || []).each do |_, option|
+.B --<%= option[:name] %><%= " \\\\fI"+option[:name].to_s+"\\\\fR" unless option[:type] == Thunder::Boolean %>
+.RS
+<%= option[:description] || "This option does xxx" %>
+.RE
+%   end
+% end
+.SH AUTHOR
+Anon Y. Mouse
+  TEMPLATE
+  template.filename="thunder-manual-start"
+  return template.result(binding).split("\n").reject(&:empty?).join("\n")
+end
+
+module Thunder
+  def start(args=ARGV.dup, options={})
+    puts generate_man_page(ARGV.first, self.class.thunder)
+  end
+end
+
+if ARGV.size != 1
+  puts "Usage: #{File.basename(__FILE__)} THUNDER_SCRIPT"
+  puts
+  puts "Prints out the suggested template for a bash completion script for the given thunder script"
+  exit 1
+end
+
+load File.expand_path(ARGV.first)
