@@ -48,7 +48,7 @@ Usage:
     # @return [(String, String)] the formatted option and its description
     def format_option(option_spec)
       usage = "  -#{option_spec[:short]}, --#{option_spec[:name]}"
-      usage << " [#{option_spec[:name].to_s.upcase}]" unless option_spec[:type] == Boolean
+      usage << " [#{option_spec[:name].to_s.upcase}]" unless option_spec[:type] == Thunder::Boolean
       return usage, option_spec[:desc]
     end
 
