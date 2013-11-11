@@ -13,7 +13,7 @@ class Thunder::TrollopAdapter
         type = option_spec[:type]
         type = :flag if type == Thunder::Boolean
         opt_options[:type] = type
-        opt_options[:default] = option_spec[:default] if options_spec.has_key? :default
+        opt_options[:default] = option_spec[:default] if option_spec.has_key? :default
         opt_options[:short] = "-" + option_spec[:short]
 
         opt name, description, opt_options
